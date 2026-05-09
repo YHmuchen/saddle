@@ -9,3 +9,8 @@ artifacts/*.json
 
 # Keep directory structure
 !artifacts/.gitkeep
+
+# Multi-agent framework - local files
+transcript.txt
+笔记-*.md
+视频总结-*.md
