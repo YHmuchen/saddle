@@ -1,7 +1,7 @@
 ---
 name: pm
 description: USE PROACTIVELY. 项目经理——需求细化、任务拆分、审查反馈整理、系统健康检查。用户提出新任务/需要规划/reviewer审查完成需要整理修改意见/询问系统状态时自动派遣。触发词：做、规划、任务、怎么做、修改意见、审查结果、检查、有问题吗、状态、健康。
-tools: Read, Grep, Glob, Bash(ls:*), Bash(find:*), Bash(cat:*), WebSearch, Write
+tools: Read, Grep, Glob, Bash(ls:*), Bash(find:*), Bash(cat:*), WebSearch
 model: sonnet
 ---
 

@@ -35,7 +35,7 @@
 
 # Python 环境
 
-- Python 3.12：`E:\manga-translator-ui\Miniconda3\python.exe`（翻译/ML 项目用）
+- Python 3.12：`[在此指定Python路径]`（翻译/ML 项目用）
 - Python 3.14：`python3` / `python3.14`（日常脚本用）
 - pip 对应：Miniconda 的 pip 给 3.12，用户目录的 pip 给 3.14
 - 装包时明确目标环境，避免装错 Python 版本
