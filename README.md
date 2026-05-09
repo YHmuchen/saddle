@@ -51,10 +51,11 @@ cd saddle
 │   ├── pm.md              # 项目经理 (模式A:规划 / 模式B:整理+回滚决策)
 │   └── reviewer.md        # 审查员 (读代码 + 运行测试 + 浏览器验证)
 ├── skills/
-│   ├── pm/SKILL.md        # /pm 入口
-│   ├── reviewer/SKILL.md  # /reviewer 入口
-│   ├── handoff/SKILL.md   # /handoff 流水线看板与交接
-│   └── recover/SKILL.md   # /recover 检查点与故障恢复
+│   ├── pm/SKILL.md          # /pm 入口
+│   ├── reviewer/SKILL.md    # /reviewer 入口
+│   ├── handoff/SKILL.md     # /handoff 流水线看板与交接
+│   ├── recover/SKILL.md     # /recover 检查点与故障恢复
+│   └── bili-summary/        # /bili-summary 视频下载+转写+总结
 ├── hooks/
 │   ├── session-start.sh   # 启动时显示流水线看板 + 中断检测
 │   └── session-stop.sh    # 退出时保存状态
@@ -75,6 +76,7 @@ cd saddle
 | **reviewer** | `/reviewer` | 读代码 + 运行验证 + 浏览器测试 → 审查报告 |
 | **handoff** | `/handoff` | 流水线看板、阶段转换、跨会话继续 |
 | **recover** | `/recover` | 创建检查点、git 回滚、中断恢复 |
+| **bili-summary** | `/bili-summary` | 下载音频 → Whisper 转写 → LLM 总结 |
 
 ## 恢复策略
 
