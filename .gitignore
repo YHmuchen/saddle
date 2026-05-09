@@ -1,0 +1,11 @@
+# Secrets - never commit
+settings.json
+settings.local.json
+*.env
+
+# Artifacts (runtime state)
+artifacts/*.md
+artifacts/*.json
+
+# Keep directory structure
+!artifacts/.gitkeep

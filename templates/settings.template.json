@@ -1,0 +1,42 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "YOUR_BASE_URL",
+    "ANTHROPIC_AUTH_TOKEN": "YOUR_AUTH_TOKEN",
+    "ANTHROPIC_MODEL": "YOUR_MODEL",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "YOUR_HAIKU_MODEL",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "YOUR_SONNET_MODEL",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "YOUR_OPUS_MODEL"
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${HOME}/.claude/hooks/session-start.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${HOME}/.claude/hooks/session-stop.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "autoUpdatesChannel": "latest",
+  "teammateMode": "tmux",
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true
+  }
+}
