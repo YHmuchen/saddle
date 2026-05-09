@@ -35,8 +35,5 @@
     ]
   },
   "autoUpdatesChannel": "latest",
-  "teammateMode": "tmux",
-  "enabledPlugins": {
-    "superpowers@claude-plugins-official": true
-  }
+  "teammateMode": "tmux"
 }
