@@ -56,6 +56,9 @@ cd saddle
 │   ├── handoff/SKILL.md     # /handoff 流水线看板与交接
 │   ├── recover/SKILL.md     # /recover 检查点与故障恢复
 │   └── bili-summary/        # /bili-summary 视频下载+转写+总结
+│       ├── SKILL.md
+│       ├── summarize.sh
+│       └── requirements.txt
 ├── hooks/
 │   ├── session-start.sh   # 启动时显示流水线看板 + 中断检测
 │   └── session-stop.sh    # 退出时保存状态
