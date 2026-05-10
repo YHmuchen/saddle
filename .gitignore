@@ -14,3 +14,6 @@ artifacts/*.json
 transcript.txt
 笔记-*.md
 视频总结-*.md
+
+# Meta-harness generated output
+harnesses/

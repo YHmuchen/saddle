@@ -1,0 +1,44 @@
+{
+  "project_type": "html-slide",
+  "description": "HTML幻灯片多智能体开发系统",
+  "output_artifact": "index.html",
+  "unit_id_format": "page{NN}",
+  "unit_id_pattern": "id=\"page{NN}\"",
+  "template_source": "./templates/seed/index.html",
+  "test_dimensions": [
+    {
+      "name": "layout",
+      "description": "布局结构审查",
+      "agent_name": "dg-slide-tester-layout",
+      "skill_ref": "dg-slide-layout-review"
+    },
+    {
+      "name": "beauty",
+      "description": "美观度审查",
+      "agent_name": "dg-slide-tester-beauty",
+      "skill_ref": "dg-slide-beauty-review"
+    },
+    {
+      "name": "animation",
+      "description": "动画时序审查",
+      "agent_name": "dg-slide-tester-animation",
+      "skill_ref": "dg-slide-animation-review"
+    }
+  ],
+  "agent_names": {
+    "planner": "dg-planner",
+    "developer": "dg-dev"
+  },
+  "artifact_patterns": {
+    "plan_file": "dev-plan.md",
+    "design_guide": "page-design-guide.md",
+    "lessons_learned": "lessons-learned.md",
+    "test_report_dir": "test-reports",
+    "test_report_pattern": "{unit_id}-{dimension}.md",
+    "log_file": "main-log.md"
+  },
+  "skills": ["dg-gray-slide-designer", "diagram-design"],
+  "default_batch_size": 1,
+  "max_correction_rounds": 3,
+  "max_concurrency": 3
+}

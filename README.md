@@ -136,8 +136,8 @@ cd 鞍
 
 - `CLAUDE.md` — 项目全局指令
 - `agents/pm.md` — 项目经理 Agent 定义
-- `agents/reviewer.md` — 审查员 Agent 定义
-- `skills/pm` / `skills/reviewer` / `skills/handoff` / `skills/recover` — 配套技能
+- `agents/inspector.md` — 验收员 Agent 定义
+- `skills/pm` / `skills/handoff` / `skills/recover` / `skills/鞍` — 配套技能
 - `hooks/session-start.sh` + `hooks/session-stop.sh` — 会话 Hook
 - `artifacts/iteration.json` — 流水线状态文件
 
@@ -178,22 +178,30 @@ SessionStart Hook 会自动显示流水线看板，检测中断状态。
 ├── CLAUDE.md              # 项目全局指令
 ├── install.sh             # 部署脚本
 ├── agents/
-│   ├── orchestrator.md    # 编排 Agent
-│   ├── dev.md             # 开发 Agent
-│   ├── tester.md          # 测试 Agent
-│   └── pm.md              # 项目经理 Agent
+│   ├── orchestrator.md       # 编排 Agent
+│   ├── dev.md                # 通用开发 Agent
+│   ├── tester.md             # 通用测试 Agent
+│   ├── pm.md                 # 项目经理 Agent
+│   ├── inspector.md          # 验收 Agent
+│   ├── harness-generator.md  # Harness 生成器
+│   ├── dg-planner.md         # 领域专用计划 Agent
+│   ├── dg-dev.md             # 领域专用开发 Agent
+│   └── dg-tester.md          # 领域专用测试 Agent
 ├── skills/
 │   ├── pm/                # 规划技能
-│   ├── reviewer/          # 审查技能
 │   ├── handoff/           # 交接技能
 │   ├── recover/           # 恢复技能
+│   ├── 鞍/                # 调度入口
 │   └── bili-summary/      # B站总结技能
 ├── hooks/
 │   ├── session-start.sh   # 启动 Hook（看板显示）
 │   └── session-stop.sh    # 停止 Hook（中断标记）
 ├── templates/
+│   ├── agents/            # Agent 渲染模板
 │   ├── settings.template.json  # 配置模板
 │   └── mcp.template.json       # MCP 模板
+├── examples/              # 示例 harness 配置
+├── harnesses/             # 生成的 harness 输出
 ├── artifacts/             # 运行时工作成果
 └── .gitignore
 ```
@@ -218,6 +226,101 @@ SessionStart Hook 会自动显示流水线看板，检测中断状态。
 "鞍"是马鞍的鞍——它连接骑手（你）和马力（AI Agent），让你稳稳地坐在上面，控制方向而不必亲自奔跑。
 
 在传统 AI 编码中，你是马：亲自处理每一个上下文切换、每一次代码修改。在鞍的框架下，你是骑手：定方向、看结果，中间的所有奔跑都交给 Agent 去完成。
+
+---
+
+## 元 Harness 使用指南
+
+Saddle 不仅是一个通用编排框架，还是一个**元 Harness**（harness for writing different project harnesses）。你可以为任意项目类型生成一套特化的多智能体开发系统。
+
+### 概念
+
+```
+元 Harness (Saddle本身)
+    │
+    ├── scaffold.sh             ← 脚手架生成器
+    ├── harness-manager.sh      ← Harness 管理器
+    └── templates/agents/       ← Agent 模板
+          │
+          ▼ 读入 harness-config.json
+          │
+    项目特化 Harness (生成物)
+          │
+          ├── 主智能体提示词.md
+          ├── agents/planner.md
+          ├── agents/dev.md
+          ├── agents/tester-*.md
+          └── harness-config.json
+```
+
+### 第一步：创建项目配置
+
+在 `examples/` 目录下创建 `<your-project>.harness.json`，参考现有示例：
+
+```json
+{
+  "project_type": "my-type",
+  "description": "我的项目多智能体开发系统",
+  "output_artifact": "output.py",
+  "unit_id_format": "unit{NN}",
+  "test_dimensions": [
+    {"name": "correctness", "description": "功能正确性审查", "agent_name": "my-tester-correctness"}
+  ],
+  "agent_names": {
+    "planner": "my-planner",
+    "developer": "my-dev"
+  },
+  "artifact_patterns": {
+    "plan_file": "dev-plan.md",
+    "design_guide": "design-guide.md",
+    "lessons_learned": "lessons-learned.md",
+    "test_report_dir": "test-reports",
+    "test_report_pattern": "{unit_id}-{dimension}.md",
+    "log_file": "main-log.md"
+  },
+  "default_batch_size": 1,
+  "max_correction_rounds": 3,
+  "max_concurrency": 3
+}
+```
+
+### 第二步：生成 Harness
+
+```bash
+./scaffold.sh examples/my-type.harness.json
+```
+
+输出到 `harnesses/my-type/`，包含完整的项目特化多智能体开发系统。
+
+### 第三步：管理 Harness
+
+```bash
+./harness-manager.sh list               # 列出所有 harness
+./harness-manager.sh inspect my-type    # 查看详情
+./harness-manager.sh destroy my-type    # 删除
+```
+
+### 使用 Harness 生成器 Agent
+
+也可以使用 `harness-generator` Agent 交互式创建：
+
+```
+你: "请创建一个 Python CLI 工具的多智能体开发系统"
+→ harness-generator 会引导你配置各参数并自动运行 scaffold.sh
+```
+
+### 模板引擎说明
+
+`templates/agents/` 目录包含 4 个渲染模板：
+
+| 模板 | 生成目标 | 占位符来源 |
+|------|----------|-----------|
+| `planner.template.md` | `agents/<planner>.md` | AGENT_NAMES.planner, ARTIFACT_PATTERNS, SKILLS |
+| `dev.template.md` | `agents/<developer>.md` | AGENT_NAMES.developer, ARTIFACT_PATTERNS, SKILLS |
+| `tester.template.md` | `agents/<tester-N>.md` | TEST_DIMENSIONS[N].*, ARTIFACT_PATTERNS |
+| `orchestrator.template.md` | `主智能体提示词.md` | 全部配置 |
+
+渲染时，`scaffold.sh` 使用 shell sed 将 `${PLACEHOLDER}` 替换为配置值。
 
 ---
 

@@ -1,0 +1,44 @@
+{
+  "project_type": "python-cli",
+  "description": "Python CLI 工具多智能体开发系统",
+  "output_artifact": "cli.py",
+  "unit_id_format": "cmd{NN}",
+  "unit_id_pattern": "class=\"cmd-{NN}\"",
+  "template_source": "",
+  "test_dimensions": [
+    {
+      "name": "correctness",
+      "description": "功能正确性审查",
+      "agent_name": "python-tester-correctness",
+      "skill_ref": ""
+    },
+    {
+      "name": "safety",
+      "description": "安全性审查",
+      "agent_name": "python-tester-safety",
+      "skill_ref": ""
+    },
+    {
+      "name": "docs",
+      "description": "文档和帮助信息审查",
+      "agent_name": "python-tester-docs",
+      "skill_ref": ""
+    }
+  ],
+  "agent_names": {
+    "planner": "python-planner",
+    "developer": "python-dev"
+  },
+  "artifact_patterns": {
+    "plan_file": "dev-plan.md",
+    "design_guide": "design-guide.md",
+    "lessons_learned": "lessons-learned.md",
+    "test_report_dir": "test-reports",
+    "test_report_pattern": "{unit_id}-{dimension}.md",
+    "log_file": "main-log.md"
+  },
+  "skills": [],
+  "default_batch_size": 1,
+  "max_correction_rounds": 3,
+  "max_concurrency": 3
+}

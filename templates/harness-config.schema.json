@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "saddle-harness-config",
+  "title": "Saddle 项目 Harness 配置",
+  "description": "定义项目特化多智能体开发系统的配置。scaffold.sh 根据此配置生成完整 harness 目录。",
+
+  "type": "object",
+  "required": [
+    "project_type",
+    "description",
+    "output_artifact",
+    "test_dimensions",
+    "agent_names",
+    "artifact_patterns"
+  ],
+
+  "properties": {
+    "project_type": {
+      "type": "string",
+      "description": "项目类型标识，如 html-slide, python-cli, web-api",
+      "examples": ["html-slide", "python-cli", "web-api"],
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+
+    "description": {
+      "type": "string",
+      "description": "项目类型描述，将作为生成的主智能体提示词的标题"
+    },
+
+    "output_artifact": {
+      "type": "string",
+      "description": "产出物文件名，如 index.html, output.py, dist/bundle.js",
+      "examples": ["index.html", "output.py", "api-server.py"]
+    },
+
+    "unit_id_format": {
+      "type": "string",
+      "description": "单元ID格式，如 page{NN}、unit{NN}、task{NN}。{NN} 会被替换为2位数字",
+      "default": "unit{NN}",
+      "examples": ["page{NN}", "unit{NN}", "task{NN}"]
+    },
+
+    "unit_id_pattern": {
+      "type": "string",
+      "description": "代码中定位单元的CSS选择器或标识模式，如 id=\"page{NN}\"、class=\"unit-{NN}\"",
+      "default": "id=\"{unit_id}\"",
+      "examples": ["id=\"page{NN}\"", "class=\"unit-{NN}\""]
+    },
+
+    "template_source": {
+      "type": "string",
+      "description": "种子模板文件的来源路径（绝对路径或相对于Saddle根目录）。如果是相对于根目录，以 ./ 开头",
+      "examples": ["./templates/seed/index.html", "/path/to/template.py"]
+    },
+
+    "test_dimensions": {
+      "type": "array",
+      "description": "测试维度列表。每个维度生成一个独立的tester Agent",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "agent_name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "维度名，如 layout, beauty, animation, correctness, safety",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "description": {
+            "type": "string",
+            "description": "维度描述，用作测试报告标题和Agent描述"
+          },
+          "agent_name": {
+            "type": "string",
+            "description": "此维度的测试Agent名称，如 dg-slide-tester-layout",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "skill_ref": {
+            "type": "string",
+            "description": "可选：该维度审查时引用的skill名称。不提供则使用默认tester模板"
+          }
+        }
+      }
+    },
+
+    "agent_names": {
+      "type": "object",
+      "description": "子Agent名称映射",
+      "required": ["planner", "developer"],
+      "properties": {
+        "planner": {
+          "type": "string",
+          "description": "计划Agent名称，如 dg-planner",
+          "default": "dg-planner"
+        },
+        "developer": {
+          "type": "string",
+          "description": "开发Agent名称，如 dg-dev",
+          "default": "dg-dev"
+        }
+      }
+    },
+
+    "artifact_patterns": {
+      "type": "object",
+      "description": "产出物命名模式",
+      "required": ["plan_file", "design_guide", "lessons_learned", "test_report_dir", "test_report_pattern", "log_file"],
+      "properties": {
+        "plan_file": {
+          "type": "string",
+          "description": "开发计划文件名",
+          "default": "dev-plan.md"
+        },
+        "design_guide": {
+          "type": "string",
+          "description": "设计指南文件名",
+          "default": "page-design-guide.md"
+        },
+        "lessons_learned": {
+          "type": "string",
+          "description": "经验库文件名",
+          "default": "lessons-learned.md"
+        },
+        "test_report_dir": {
+          "type": "string",
+          "description": "测试报告输出目录名",
+          "default": "test-reports"
+        },
+        "test_report_pattern": {
+          "type": "string",
+          "description": "测试报告文件命名模式，支持 {unit_id} 和 {dimension} 占位符",
+          "default": "{unit_id}-{dimension}.md"
+        },
+        "log_file": {
+          "type": "string",
+          "description": "主Agent日志文件名",
+          "default": "main-log.md"
+        }
+      }
+    },
+
+    "skills": {
+      "type": "array",
+      "description": "开发Agent引用的skill列表",
+      "items": {
+        "type": "string",
+        "description": "skill名称"
+      }
+    },
+
+    "default_batch_size": {
+      "type": "integer",
+      "description": "默认批量开发大小",
+      "default": 1,
+      "minimum": 1
+    },
+
+    "max_correction_rounds": {
+      "type": "integer",
+      "description": "最大修正轮次",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 10
+    },
+
+    "max_concurrency": {
+      "type": "integer",
+      "description": "最大并发测试Agent数",
+      "default": 3,
+      "minimum": 1,
+      "maximum": 10
+    }
+  },
+
+  "examples": [
+    {
+      "project_type": "html-slide",
+      "description": "HTML幻灯片多智能体开发系统",
+      "output_artifact": "index.html",
+      "unit_id_format": "page{NN}",
+      "unit_id_pattern": "id=\"page{NN}\"",
+      "template_source": "./templates/seed/index.html",
+      "test_dimensions": [
+        {"name": "layout", "description": "布局结构审查", "agent_name": "dg-slide-tester-layout", "skill_ref": "dg-slide-layout-review"},
+        {"name": "beauty", "description": "美观度审查", "agent_name": "dg-slide-tester-beauty", "skill_ref": "dg-slide-beauty-review"},
+        {"name": "animation", "description": "动画时序审查", "agent_name": "dg-slide-tester-animation", "skill_ref": "dg-slide-animation-review"}
+      ],
+      "agent_names": {"planner": "dg-planner", "developer": "dg-dev"},
+      "artifact_patterns": {
+        "plan_file": "dev-plan.md",
+        "design_guide": "page-design-guide.md",
+        "lessons_learned": "lessons-learned.md",
+        "test_report_dir": "test-reports",
+        "test_report_pattern": "{unit_id}-{dimension}.md",
+        "log_file": "main-log.md"
+      },
+      "skills": ["dg-gray-slide-designer", "diagram-design"],
+      "default_batch_size": 1,
+      "max_correction_rounds": 3,
+      "max_concurrency": 3
+    }
+  ]
+}

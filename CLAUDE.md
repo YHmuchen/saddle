@@ -51,6 +51,23 @@
 - 团队成员用 SendMessage 直接通信，不再由主会话转发
 - nah：已卸载，暂无替代 guard，操作前注意路径边界
 
+# 元 Harness 能力
+
+本项目同时是一个"用于编写不同项目 harness 的 harness"（元 Harness）：
+
+- **scaffold.sh** — 读入 `harness-config.json` → 渲染模板 → 生成完整项目特化 harness 目录
+- **harness-manager.sh** — 管理已生成的 harness: `list` / `inspect` / `destroy`
+- **agents/harness-generator.md** — 交互式创建新项目 harness 的 Agent
+- **templates/agents/** — 4 个渲染模板（planner/dev/tester/orchestrator），可覆盖自定义
+- **examples/** — 开箱即用的示例配置（html-slide, python-cli）
+
+使用流程:
+```
+./scaffold.sh examples/html-slide.harness.json  # 生成 HTML 幻灯片开发系统
+./harness-manager.sh list                        # 列出所有生成的 harness
+agents/harness-generator                         # 交互式生成器
+```
+
 # 工具偏好
 
 - 改文件优先用 Edit（精确替换），整文件重写时才用 Write
